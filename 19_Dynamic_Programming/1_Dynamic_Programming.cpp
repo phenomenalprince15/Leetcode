@@ -276,6 +276,85 @@ class HouseRobber : public DP {
         }
 };
 
+/*
+- Leetcode 91 : Decode ways
+A message containing letters from A-Z can be encoded into numbers using the following mapping:
+'A' -> "1"
+'B' -> "2"
+...
+'Z' -> "26"
+To decode a string s consisting of digits, you need to determine how many ways you can decode it.
+
+For example:
+"12" can be decoded as "AB" (1 2) or "L" (12). Thus, there are 2 ways to decode it.
+"226" can be decoded as "BBF" (2 2 6), "BZ" (2 26), or "VF" (22 6). Thus, there are 3 ways to decode it.
+*/
+class DecodeWays : public DP {
+    private:
+        string str;
+        int n;
+    
+    public:
+        DecodeWays(string& s) : str(s), n(s.size()), DP(s.size() + 1) {}
+
+        // Recursive approach
+        int decodeRecursive(int idx) {
+            if (idx == n) return 1;  // Reached end of string
+            if (str[idx] == '0') return 0;  // Invalid starting character
+
+            // Choosing one letter
+            int count = decodeRecursive(idx + 1);
+
+            // Choosing two letters, between "10" and "26"
+            if (idx + 1 < n && (str[idx] == '1' || (str[idx] == '2' && str[idx + 1] <= '6'))) {
+                count += decodeRecursive(idx + 2);
+            }
+            return count;
+        }
+
+        // Memoization approach
+        int decodeMemoization(int idx) {
+            if (idx == n) return 1;  // Reached end of string
+            if (str[idx] == '0') return 0;  // Invalid starting character
+
+            if (dp[idx] != -1) return dp[idx];
+
+            // Choosing one letter
+            int count = decodeMemoization(idx + 1);
+
+            // Choosing two letters, between "10" and "26"
+            if (idx + 1 < n && (str[idx] == '1' || (str[idx] == '2' && str[idx + 1] <= '6'))) {
+                count += decodeMemoization(idx + 2);
+            }
+            dp[idx] = count;
+            return count;
+        }
+
+        // Dynamic Programming Iteration approach
+        int decodeDPIteration() {
+            vector<int> dp(n + 1, 0);
+
+            // Base case
+            dp[0] = 1;  // An empty string has one way to decode
+            if (n > 0) dp[1] = (str[0] != '0') ? 1 : 0;  // Single character can be decoded if it's not '0'
+
+            // Fill the DP table
+            for (int i = 1; i < n; ++i) {
+                // Check if the single character can be decoded
+                if (str[i] != '0') {
+                    dp[i + 1] += dp[i];
+                }
+
+                // Check if the two characters can be decoded
+                if (i > 0 && (str[i - 1] == '1' || (str[i - 1] == '2' && str[i] <= '6'))) {
+                    dp[i + 1] += dp[i - 1];
+                }
+            }
+
+            return dp[n];
+        }
+};
+
 int main () {
    // Problem 2: MinCostClimbingStairs
     vector<int> cost = {10, 15, 20, 25, 30};
@@ -300,6 +379,13 @@ int main () {
     printf("Maximum money robbed (recursive): %d\n", problem4.solveRecursive());
     printf("Maximum money robbed (recursive): %d\n", problem4.solveMemoization());
     printf("Maximum money robbed (recursive): %d\n", problem4.solveDPIteration());
+
+    // Problem 5: Leetcode 91
+    string s = "226";
+    DecodeWays decoder(s);
+    cout << "Number of ways to decode: " << decoder.decodeRecursive(0) << endl;
+    cout << "Number of ways to decode: " << decoder.decodeMemoization(0) << endl;
+    cout << "Number of ways to decode: " << decoder.decodeDPIteration() << endl;
 
     return 0;
 }
