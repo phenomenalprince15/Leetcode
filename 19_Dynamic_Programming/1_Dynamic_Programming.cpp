@@ -13,11 +13,7 @@ class DP {
             dp = vector<int> (size, -1);
         }
 
-        // Pure virtual function to be implemented by derived classes
-        virtual int solveRecursive() = 0;
-        virtual int solveDPMemoization() = 0;
-        virtual int solveDPIteration() = 0;
-
+        // Reset the DP table
         void reset(int size) {
             dp.assign(size, -1);
         }
@@ -159,56 +155,129 @@ class RodCutting : public DP {
     private:
         vector<int> prices;
         int n;
-        /*
-        Recursion ::
-        Think about choices you have.
-        prices = [1, 5, 8, 9]
-        You can either do a cut of 1 unit, 2 units, 3 units, ..... , L-1 units, L units
-        if I do cut of 1 unit, priceSoFar += prices[cut] and work on other subproblem [ |......] similarly repeat
-        and take max of all choices.
-        f(length) = max{ (cut = 1 to L) prices[cut] + f(L-cut)}
-        */
 
         int maxProfitRecursive(int length) {
-            // Base case
             if (length <= 0) return 0;
 
             int maxProfit = INT_MIN;
-
-            // cut for all choices
-            for (int cut=1; cut<=length; cut++) {
-                maxProfit = max(maxProfit, prices[cut-1] + maxProfitRecursive(length-cut));
+            for (int cut = 1; cut <= length; cut++) {
+                maxProfit = max(maxProfit, prices[cut - 1] + maxProfitRecursive(length - cut));
             }
             return maxProfit;
         }
-        /*
-        TC : O(2^L)
-        SC : O(L^2)
-        */
 
-        int maxProfitMemoization() {
-            return 0;
+        int maxProfitMemoization(int length) {
+            if (length <= 0) return 0;
+            if (dp[length - 1] != -1) return dp[length - 1];
+
+            int maxProfit = INT_MIN;
+            for (int cut = 1; cut <= length; cut++) {
+                maxProfit = max(maxProfit, prices[cut - 1] + maxProfitMemoization(length - cut));
+            }
+            dp[length - 1] = maxProfit;
+            return dp[length - 1];
         }
 
-        int maxProfitDPIteration () {
-            return 0;
+        int maxProfitDPIteration() {
+            dp.resize(n + 1, -1);
+            dp[0] = 0;
+
+            for (int i = 1; i <= n; i++) {
+                int maxProfit = INT_MIN;
+                for (int cut = 1; cut <= i; cut++) {
+                    maxProfit = max(maxProfit, prices[cut - 1] + dp[i - cut]);
+                }
+                dp[i] = maxProfit;
+            }
+
+            return dp[n];
         }
     
     public:
         RodCutting(vector<int>& prices) : DP(prices.size()), prices(prices), n(prices.size()) {}
+
         int solveRecursive() {
             return maxProfitRecursive(n);
         }
+
         int solveDPMemoization() {
-            return maxProfitMemoization();
+            return maxProfitMemoization(n);
         }
+
         int solveDPIteration() {
             return maxProfitDPIteration();
         }
 };
 
+/*
+- Problem 4 : House Robber
+Problem:
+You are a professional robber planning to rob houses along a street.
+Each house has a certain amount of money stashed. However, you cannot rob two adjacent houses, as it will alert the police.
+Your task is to find the maximum amount of money you can rob tonight without alerting the police.
+
+Input: nums = [2,7,9,3,1]
+Output: 12
+Explanation: Rob house 1 (money = 2), rob house 3 (money = 9), rob house 5 (money = 1).
+Total amount robbed = 2 + 9 + 1 = 12.
+*/
+class HouseRobber : public DP {
+    private:
+        vector<int> houses;
+        int n;
+    
+    public:
+        HouseRobber(vector<int>& nums) : houses(nums), n(nums.size()), DP(nums.size()) {}
+
+        /*
+        Recursive : Pick or not Pick and think about previous houses and take max of all choices.
+        */
+        int maxAmountRecursive(int idx) {
+            if (idx < 0) return 0;
+            if (idx == 0) return houses[0];
+
+            int pick = houses[idx] + maxAmountRecursive(idx - 2);
+            int notPick = maxAmountRecursive(idx - 1);
+
+            return max(pick, notPick);
+        }
+
+        int maxAmountMemoization(int idx) {
+            if (idx < 0) return 0;
+            if (idx == 0) return houses[0];
+            
+            if (dp[idx] != -1) return dp[idx];
+
+            int pick = houses[idx] + maxAmountMemoization(idx - 2);
+            int notPick = maxAmountMemoization(idx - 1);
+            dp[idx] = max(pick, notPick);
+
+            return dp[idx];
+        }
+
+        int solveRecursive() {
+            return maxAmountRecursive(n - 1);
+        }
+        int solveMemoization() {
+            return maxAmountMemoization(n-1);
+        }
+        int solveDPIteration() {
+            
+            // Base case
+            dp[0] = houses[0];
+            dp[1] = max(houses[0], houses[1]);
+
+            for (int i=2; i<n; i++) {
+                int pick = houses[i] + dp[i-2];
+                int notPick = dp[i-1];
+                dp[i] = max(pick, notPick);
+            }
+            return dp[n-1];
+        }
+};
+
 int main () {
-   // Problem 2 
+   // Problem 2: MinCostClimbingStairs
     vector<int> cost = {10, 15, 20, 25, 30};
     MinCostClimbingStairs problem2(cost);
 
@@ -216,13 +285,21 @@ int main () {
     printf("Minimum cost to reach the top (memoized): %d\n", problem2.solveDPMemoization());
     printf("Minimum cost to reach the top (iterative): %d\n", problem2.solveDPIteration());
 
-    // Problem 3
+    // Problem 3: RodCutting
     vector<int> prices = {1, 5, 8, 9};
     RodCutting problem3(prices);
 
     printf("Maximum profit (recursive): %d\n", problem3.solveRecursive());
     printf("Maximum profit (memoized): %d\n", problem3.solveDPMemoization());
     printf("Maximum profit (iterative): %d\n", problem3.solveDPIteration());
+
+    // Problem 4: HouseRobber
+    vector<int> houses = {2, 7, 9, 3, 1};
+    HouseRobber problem4(houses);
+
+    printf("Maximum money robbed (recursive): %d\n", problem4.solveRecursive());
+    printf("Maximum money robbed (recursive): %d\n", problem4.solveMemoization());
+    printf("Maximum money robbed (recursive): %d\n", problem4.solveDPIteration());
 
     return 0;
 }

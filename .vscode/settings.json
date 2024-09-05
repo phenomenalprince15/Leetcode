@@ -2,5 +2,6 @@
     "files.associations": {
         "string": "cpp",
         "random": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "C:/Users/wikis/OneDrive/Documents/CPP/Leetcode/12_Linked_Lists"
 }
