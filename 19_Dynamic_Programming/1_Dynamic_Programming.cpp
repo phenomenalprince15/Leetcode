@@ -355,6 +355,74 @@ class DecodeWays : public DP {
         }
 };
 
+/*
+Unique Path - https://leetcode.com/problems/unique-paths/
+*/
+
+/*
+Unique Path with obstacles - https://leetcode.com/problems/unique-paths-ii/description/  
+*/
+
+/*
+Minimum path sum - https://leetcode.com/problems/minimum-path-sum/description/
+*/
+
+/*
+Minimum Path sum in triangle - https://leetcode.com/problems/triangle/description/
+*/
+
+/*
+Falling path sum - 
+*/
+
+/*
+- Problem Description : Subset Sum equals K
+You are given an array/list ‘ARR’ of ‘N’ positive integers and an integer ‘K’.
+Your task is to check if there exists a subset in ‘ARR’ with a sum equal to ‘K’.
+Note: Return true if there exists a subset with sum equal to ‘K’. Otherwise, return false.
+
+For Example :
+If ‘ARR’ is {1,2,3,4} and ‘K’ = 4, then there exists 2 subsets with sum = 4. These are {1,3} and {4}. Hence, return true.
+
+--> Think of problem in terms of generating subsets while reducing target and if it hits zero, it's true, else false.
+*/
+
+/*
+- Problem : Partition Equal Subset Sum - https://leetcode.com/problems/partition-equal-subset-sum/
+You are given an array 'ARR' of 'N' positive integers.
+Your task is to find if we can partition the given array into two subsets such that the sum of elements in both subsets is equal.
+
+For example, let’s say the given array is [2, 3, 3, 3, 4, 5],
+then the array can be partitioned as [2, 3, 5], and [3, 3, 4] with equal sum 10.
+Follow Up:
+Can you solve this using not more than O(S) extra space, where S is the sum of all elements of the given array?
+
+Sample Input 1:
+2
+6
+3 1 1 2 2 1
+5
+5 6 5 11 6
+Sample Output 1:
+true
+false    
+Explanation Of Sample Input 1:
+For the first test case, the array can be partitioned as ([2,1,1,1] and [3, 2]) or ([2,2,1], and [1,1,3]) with sum 5.
+
+For the second test case, the array can’t be partitioned.
+Sample Input 2:
+2
+9
+2 2 1 1 1 1 1 3 3
+6
+8 7 6 12 4 5
+Sample Output 2:
+false
+true
+
+--> Think as the above problem, subset sum equals K. Here we just need to divide totalSum/2 and follow same.
+*/
+
 int main () {
    // Problem 2: MinCostClimbingStairs
     // vector<int> cost = {10, 15, 20, 25, 30};
