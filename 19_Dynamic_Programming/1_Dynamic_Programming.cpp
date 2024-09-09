@@ -357,35 +357,35 @@ class DecodeWays : public DP {
 
 int main () {
    // Problem 2: MinCostClimbingStairs
-    vector<int> cost = {10, 15, 20, 25, 30};
-    MinCostClimbingStairs problem2(cost);
+    // vector<int> cost = {10, 15, 20, 25, 30};
+    // MinCostClimbingStairs problem2(cost);
 
-    printf("Minimum cost to reach the top (recursive): %d\n", problem2.solveRecursive());
-    printf("Minimum cost to reach the top (memoized): %d\n", problem2.solveDPMemoization());
-    printf("Minimum cost to reach the top (iterative): %d\n", problem2.solveDPIteration());
+    // printf("Minimum cost to reach the top (recursive): %d\n", problem2.solveRecursive());
+    // printf("Minimum cost to reach the top (memoized): %d\n", problem2.solveDPMemoization());
+    // printf("Minimum cost to reach the top (iterative): %d\n", problem2.solveDPIteration());
 
-    // Problem 3: RodCutting
-    vector<int> prices = {1, 5, 8, 9};
-    RodCutting problem3(prices);
+    // // Problem 3: RodCutting
+    // vector<int> prices = {1, 5, 8, 9};
+    // RodCutting problem3(prices);
 
-    printf("Maximum profit (recursive): %d\n", problem3.solveRecursive());
-    printf("Maximum profit (memoized): %d\n", problem3.solveDPMemoization());
-    printf("Maximum profit (iterative): %d\n", problem3.solveDPIteration());
+    // printf("Maximum profit (recursive): %d\n", problem3.solveRecursive());
+    // printf("Maximum profit (memoized): %d\n", problem3.solveDPMemoization());
+    // printf("Maximum profit (iterative): %d\n", problem3.solveDPIteration());
 
-    // Problem 4: HouseRobber
-    vector<int> houses = {2, 7, 9, 3, 1};
-    HouseRobber problem4(houses);
+    // // Problem 4: HouseRobber
+    // vector<int> houses = {2, 7, 9, 3, 1};
+    // HouseRobber problem4(houses);
 
-    printf("Maximum money robbed (recursive): %d\n", problem4.solveRecursive());
-    printf("Maximum money robbed (recursive): %d\n", problem4.solveMemoization());
-    printf("Maximum money robbed (recursive): %d\n", problem4.solveDPIteration());
+    // printf("Maximum money robbed (recursive): %d\n", problem4.solveRecursive());
+    // printf("Maximum money robbed (recursive): %d\n", problem4.solveMemoization());
+    // printf("Maximum money robbed (recursive): %d\n", problem4.solveDPIteration());
 
-    // Problem 5: Leetcode 91
-    string s = "226";
-    DecodeWays decoder(s);
-    cout << "Number of ways to decode: " << decoder.decodeRecursive(0) << endl;
-    cout << "Number of ways to decode: " << decoder.decodeMemoization(0) << endl;
-    cout << "Number of ways to decode: " << decoder.decodeDPIteration() << endl;
+    // // Problem 5: Leetcode 91
+    // string s = "226";
+    // DecodeWays decoder(s);
+    // cout << "Number of ways to decode: " << decoder.decodeRecursive(0) << endl;
+    // cout << "Number of ways to decode: " << decoder.decodeMemoization(0) << endl;
+    // cout << "Number of ways to decode: " << decoder.decodeDPIteration() << endl;
 
     return 0;
 }

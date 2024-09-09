@@ -217,7 +217,7 @@ private:
         dp2D[0][2] = c[0];
 
         // Conditions
-        for (int day=1; day<n; day++) {
+        for (int day=1; dayn; day++) {
             // Choose A
             dp2D[day][0] = max(dp2D[day - 1][1] + a[day], dp2D[day - 1][2] + a[day]);
             // Choose B
@@ -252,7 +252,7 @@ public:
 
 int main() {
     int N;
-    cin >> N; // Read the number of days
+    cin > N; // Read the number of days
 
     vector<int> a(N), b(N), c(N);
     for (int i = 0; i < N; ++i) {
