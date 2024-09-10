@@ -6,6 +6,8 @@
 
 const long long MOD = 1000000007;
 
+#define ll long long
+
 using namespace std;
 
 class DP {
@@ -252,7 +254,63 @@ public:
 
 };
 
-// Problem 4 - https://atcoder.jp/contests/dp/tasks/dp_y
+// Problem - https://atcoder.jp/contests/dp/tasks/dp_d
+class KnapsackI : public DP2D {
+    private:
+        vector<int> weights;
+        vector<ll> values;
+        int maxWeight;
+    public:
+        KnapsackI(vector<int>& weights, vector<ll> values, int maxWeight) : weights(weights), values(values), 
+                    maxWeight(maxWeight), DP2D(weights.size(), maxWeight + 1) {}
+
+        ll knapsackIRecursive(int idx, int amt) { // idx = n-1
+            // Base case
+            if(idx < 0) return 0;
+            if (amt == 0) return 0;
+            if (idx == 0) {
+                if (amt >= weights[idx]){
+                    return values[idx];
+                }
+                return 0;
+            }
+
+            // selecting to take or notTake a coin
+            ll notTake = knapsackIRecursive(idx-1, amt);
+            ll take = LLONG_MIN;
+            if (amt >= weights[idx]) {
+                take = values[idx] + knapsackIRecursive(idx-1, amt - weights[idx]);
+            }
+
+            return max(take, notTake);
+        }
+
+        ll knapsackIMemoization(int idx, int amt) { // idx = n-1
+            // Base case
+            if(idx < 0) return 0;
+            if (amt == 0) return 0;
+            if (idx == 0) {
+                if (amt >= weights[idx]){
+                    return values[idx];
+                }
+                return 0;
+            }
+
+            if (dp2D[idx][amt] != -1) return dp2D[idx][amt];
+
+            // selecting to take or notTake a coin
+            ll notTake = knapsackIMemoization(idx-1, amt);
+            ll take = LLONG_MIN;
+            if (amt >= weights[idx]) {
+                take = values[idx] + knapsackIMemoization(idx-1, amt - weights[idx]);
+            }
+            dp2D[idx][amt] = max(take, notTake);
+
+            return dp2D[idx][amt];
+        }
+};
+
+// Problem - https://atcoder.jp/contests/dp/tasks/dp_y
 /*
 Later ---
 */
@@ -290,29 +348,23 @@ class GridII : public DP2D {
         }
 };
 
-int main() {
-    int n, r, c;
-    cin >> r >> c >> n;
-    vector<vector<int>> nums(r, vector<int>(c, 0));
 
-    for (int i = 0; i < n; i++) {
-        int h, w;
-        cin >> h >> w;
-        if (h > 0 && h <= r && w > 0 && w <= c) { // Ensure indices are within bounds
-            nums[h - 1][w - 1] = 1; // Mark the cell as blocked
-        }
+
+int main() {
+    int n, w;
+    cin >> n >> w;
+
+    vector<int> weights(n, 0);
+    vector<ll> values(n, 0);
+
+    for (int i=0; i<n; i++) {
+        cin >> weights[i] >> values[i];
     }
 
-    // Optional: print the grid for debugging
-    // for (int i = 0; i < r; i++) {
-    //     for (int j = 0; j < c; j++) {
-    //         cout << nums[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
+    KnapsackI k(weights, values, w);
 
-    GridII grid(nums, r, c);
-    cout << grid.gridIIMemoization(r - 1, c - 1) << endl; // Output the result
+    cout << k.knapsackIRecursive(n-1, w);
+    cout << k.knapsackIMemoization(n-1, w);
 
     return 0;
 }
