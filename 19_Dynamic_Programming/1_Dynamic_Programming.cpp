@@ -387,6 +387,85 @@ If ‘ARR’ is {1,2,3,4} and ‘K’ = 4, then there exists 2 subsets with sum 
 --> Think of problem in terms of generating subsets while reducing target and if it hits zero, it's true, else false.
 */
 
+class SubsetSumEqualsK : public DP2D {
+    private:
+        vector<int> nums;
+        int n;
+        int k; // target
+    public:
+        SubsetSumEqualsK(vector<int>& nums, int target) : nums(nums), k(target), n(nums.size()), DP2D(nums.size(), target) {} 
+
+        bool subsetSumKRecursive(int idx, int target) { // target will decrease or not decrease, choose that
+            // Base case
+            if (target == 0) return true;
+            if (idx == 0) {
+                if (target == nums[0]) return true;
+                return false;
+            }
+
+            // I will be able to take sum only if target >= nums[idx], so it can either be true or false
+            //bool takeSum = subsetSumKRecursive(idx - 1, target - nums[idx]); // target will reduce in next step 
+            bool takeSum = false;
+            if (target >= nums[idx]) {
+                takeSum = subsetSumKRecursive(idx - 1, target - nums[idx]);
+            }
+            
+            bool notTakeSum = subsetSumKRecursive(idx - 1, target); // target will remain same in next step
+
+            return takeSum || notTakeSum;
+        }
+
+        bool subsetSumKMemoization(int idx, int target) { // target will decrease or not decrease, choose that
+            // Base case
+            if (target == 0) return true;
+            if (idx == 0) {
+                if (target == nums[0]) return true;
+                return false;
+            }
+
+            if (dp2D[idx][target] != -1) return dp2D[idx][target];
+
+            // I will be able to take sum only if target >= nums[idx], so it can either be true or false
+            //bool takeSum = subsetSumKRecursive(idx - 1, target - nums[idx]); // target will reduce in next step 
+            bool takeSum = false;
+            if (target >= nums[idx]) {
+                takeSum = subsetSumKMemoization(idx - 1, target - nums[idx]);
+            }
+            
+            bool notTakeSum = subsetSumKMemoization(idx - 1, target); // target will remain same in next step
+
+            dp2D[idx][target] = takeSum || notTakeSum;
+
+            return dp2D[idx][target];
+        }
+
+        bool subsetSumKDPIteration () { // target will decrease or not decrease, choose that
+            // Think of base case when target is zero, populate all target 0 as dp[idx][target] as true.
+            // Think of base case when idx is zero, target is true only when target == nums[0], set as true.
+            vector<vector<bool>> dp(n, vector<bool> (k + 1, false));
+
+            for (int i=0; i<n; i++) {
+                dp[i][0] = true;
+            }
+
+            if (k >= nums[0]) dp[0][nums[0]] = true;
+
+            for (int i=1; i<n; i++) {
+                for (int j=1; j<=k; j++) {
+                    bool takeSum = false;
+                    if (j >= nums[i]) {
+                    takeSum = dp[i-1][j - nums[i]]; //subsetSumKMemoization(idx - 1, target - nums[idx]);
+                }
+                
+                bool notTakeSum = dp[i-1][j]; //subsetSumKMemoization(idx - 1, target); // target will remain same in next step
+
+                dp[i][j] = takeSum || notTakeSum;
+                }
+            }
+            return dp[n-1][k];
+        }
+};
+
 /*
 - Problem : Partition Equal Subset Sum - https://leetcode.com/problems/partition-equal-subset-sum/
 You are given an array 'ARR' of 'N' positive integers.
@@ -423,6 +502,118 @@ true
 --> Think as the above problem, subset sum equals K. Here we just need to divide totalSum/2 and follow same.
 */
 
+/*
+Problem - Partition Set Into 2 Subsets With Min Absolute Sum Diff
+https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/description/
+*/
+
+/*
+Count Subsets with Sum K 
+
+*/
+
+/*
+Count Partitions with Given Difference
+*/
+
+/*
+0/1 Knapsack - 
+A thief is robbing a store and can carry a maximal weight of W into his knapsack.
+There are N items and the ith item weighs wi and is of value vi.
+Considering the constraints of the maximum weight that a knapsack can carry,
+you have to find and return the maximum value that a thief can generate by stealing items.
+
+Sample Input:
+1 
+4
+1 2 4 5
+5 4 8 6
+5
+Sample Output:
+13
+*/
+
+class Knapsack : public DP2D {
+    private:
+        vector<int> weights;
+        vector<int> values;
+        int bagW;
+    public:
+        Knapsack(vector<int>& weights, vector<int> values, int bagW) : weights(weights), values(values), 
+                    bagW(bagW), DP2D(weights.size(), bagW + 1) {}
+        
+        int knapsackRecursive(int idx, int bagW) { // idx = n-1
+            // Base case
+            if (idx == 0) {
+                if (bagW >= weights[idx]) return values[idx];
+                else return 0;
+            }
+
+            // I can choose to take or not take that weight
+            int notTake = knapsackRecursive(idx-1, bagW); // no weight to be added, nothing to reduce from bag weight
+            int take = INT_MIN; // I can only take if bagW >= weights[idx] and add the value of that idx weight.
+            if (bagW >= weights[idx]) take = values[idx] + knapsackRecursive(idx-1, bagW - weights[idx]);
+
+            return max(take, notTake);
+        }
+
+        int knapsackMemoization(int idx, int bagW) { // idx = n-1
+        // Base case
+        if (idx == 0) {
+            if (bagW >= weights[idx]) return values[idx];
+            else return 0;
+        }
+
+        if (dp2D[idx][bagW] != -1) return dp2D[idx][bagW];
+
+        // I can choose to take or not take that weight
+        int notTake = knapsackMemoization(idx-1, bagW); // no weight to be added, nothing to reduce from bag weight
+        int take = INT_MIN; // I can only take if bagW >= weights[idx] and add the value of that idx weight.
+        if (bagW >= weights[idx]) take = values[idx] + 
+            knapsackMemoization(idx-1, bagW - weights[idx]);
+        
+        dp2D[idx][bagW] = max(take, notTake);
+
+        return dp2D[idx][bagW];
+    }
+
+        int knapsackDPIteration() { // idx = n-1
+        // Base case (convert from memoization)
+        int m = weights.size();
+        dp2D.assign(m, vector<int> (bagW + 1, 0));
+        for (int j=0; j<=bagW; j++) {
+            if (j >= weights[0]) {
+                dp2D[0][j] = values[0];
+            }
+        }
+
+        for (int i=1; i<m; i++) {
+            for (int j=0; j<=bagW; j++) {
+                int notTake = dp2D[i-1][j]; //knapsackMemoization(weights, values, idx-1, bagW, dp); // no weight to be added, nothing to reduce from bag weight
+                int take = INT_MIN; // I can only take if bagW >= weights[idx] and add the value of that idx weight.
+                if (j >= weights[i]) take = values[i] + 
+                    dp2D[i-1][j - weights[i]]; //knapsackMemoization(weights, values, idx-1, bagW - weights[idx], dp);
+                
+                dp2D[i][j] = max(take, notTake);
+            }
+        }
+        
+        return dp2D[m-1][bagW];
+    }
+};
+
+/*
+- Problem - Coin change (Minimum coins to make target amount with infinite supply of coins)
+You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+You may assume that you have an infinite number of each kind of coin.
+
+Example :
+coins = [1,2,5], amount = 11
+Output: 3
+*/
+
+
 int main () {
    // Problem 2: MinCostClimbingStairs
     // vector<int> cost = {10, 15, 20, 25, 30};
@@ -454,6 +645,31 @@ int main () {
     // cout << "Number of ways to decode: " << decoder.decodeRecursive(0) << endl;
     // cout << "Number of ways to decode: " << decoder.decodeMemoization(0) << endl;
     // cout << "Number of ways to decode: " << decoder.decodeDPIteration() << endl;
+
+    // // Problem - Subset Sum equals K
+    // vector<int> nums = {1,2,3,4};
+    // int target = 4;
+    // SubsetSumEqualsK subsetK(nums, target);
+    // bool result = subsetK.subsetSumKDPIteration();
+    // if (result) {
+    //     cout << "Subset sum equals K is true." << endl;
+    // } else {
+    //     cout << "Subset sum equals K is false." << endl;
+    // }
+
+    vector<int> weights = {1, 3, 4, 5};
+    vector<int> values = {10, 40, 50, 70};
+    int bagW = 8; // Maximum weight the bag can hold
+
+    // Create the Knapsack object
+    Knapsack knapsack(weights, values, bagW);
+
+    // Compute the maximum value that can be obtained with the given weight limit
+    int n = weights.size();
+    int maxValue = knapsack.knapsackDPIteration();
+
+    // Output the result
+    cout << "Maximum value that can be obtained: " << maxValue << endl;
 
     return 0;
 }

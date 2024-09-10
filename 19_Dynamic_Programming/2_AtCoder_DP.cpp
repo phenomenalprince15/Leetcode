@@ -4,6 +4,8 @@
 #include <algorithm> // For min function
 #include <climits>
 
+const long long MOD = 1000000007;
+
 using namespace std;
 
 class DP {
@@ -217,7 +219,7 @@ private:
         dp2D[0][2] = c[0];
 
         // Conditions
-        for (int day=1; dayn; day++) {
+        for (int day=1; day < n; day++) {
             // Choose A
             dp2D[day][0] = max(dp2D[day - 1][1] + a[day], dp2D[day - 1][2] + a[day]);
             // Choose B
@@ -250,17 +252,67 @@ public:
 
 };
 
-int main() {
-    int N;
-    cin > N; // Read the number of days
+// Problem 4 - https://atcoder.jp/contests/dp/tasks/dp_y
+/*
+Later ---
+*/
+class GridII : public DP2D {
+    private:
+        vector<vector<int>> nums; // Grid with blocked cells marked as 1
+    public:
+        GridII(vector<vector<int>>& nums, int rows, int cols) : nums(nums), DP2D(rows, cols) {}
 
-    vector<int> a(N), b(N), c(N);
-    for (int i = 0; i < N; ++i) {
-        cin >> a[i] >> b[i] >> c[i]; // Read happiness values for each day
+        long long gridIIRecursive(int i, int j) {
+            // Base case
+            if (i < 0 || j < 0) return 0; // Out of bounds
+            if (nums[i][j] == 1) return 0; // Blocked cell
+            if (i == 0 && j == 0) return 1; // Found 1 path
+
+            long long top = gridIIRecursive(i - 1, j);
+            long long left = gridIIRecursive(i, j - 1);
+
+            return (top + left) % MOD; // Apply modulo
+        }
+
+        long long gridIIMemoization(int i, int j) {
+            // Base case
+            if (i < 0 || j < 0) return 0; // Out of bounds
+            if (nums[i][j] == 1) return 0; // Blocked cell
+            if (i == 0 && j == 0) return 1; // Found 1 path
+
+            if (dp2D[i][j] != -1) return dp2D[i][j];
+
+            long long top = gridIIMemoization(i - 1, j);
+            long long left = gridIIMemoization(i, j - 1);
+            dp2D[i][j] = (top + left) % MOD; // Apply modulo
+
+            return dp2D[i][j];
+        }
+};
+
+int main() {
+    int n, r, c;
+    cin >> r >> c >> n;
+    vector<vector<int>> nums(r, vector<int>(c, 0));
+
+    for (int i = 0; i < n; i++) {
+        int h, w;
+        cin >> h >> w;
+        if (h > 0 && h <= r && w > 0 && w <= c) { // Ensure indices are within bounds
+            nums[h - 1][w - 1] = 1; // Mark the cell as blocked
+        }
     }
 
-    Vacation happiness(a, b, c);
-    //cout << happiness.getMaxHappinessRecursive() << endl; // Output the result using recursive approach
-    cout << happiness.getMaxHappinessDPIteration() << endl; // Output the result using memoization
+    // Optional: print the grid for debugging
+    // for (int i = 0; i < r; i++) {
+    //     for (int j = 0; j < c; j++) {
+    //         cout << nums[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+
+    GridII grid(nums, r, c);
+    cout << grid.gridIIMemoization(r - 1, c - 1) << endl; // Output the result
+
     return 0;
 }
