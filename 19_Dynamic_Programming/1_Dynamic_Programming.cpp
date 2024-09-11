@@ -615,7 +615,6 @@ coins = [1,2,5], amount = 11
 Output: 3
 */
 
-
 int main () {
    // Problem 2: MinCostClimbingStairs
     // vector<int> cost = {10, 15, 20, 25, 30};
