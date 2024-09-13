@@ -3,7 +3,12 @@
         "string": "cpp",
         "random": "cpp",
         "vector": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "xstring": "cpp",
+        "xlocale": "cpp",
+        "utility": "cpp",
+        "xutility": "cpp",
+        "climits": "cpp"
     },
     "cmake.sourceDirectory": "C:/Users/wikis/OneDrive/Documents/CPP/Leetcode/12_Linked_Lists"
 }
