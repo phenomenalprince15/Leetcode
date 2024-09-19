@@ -8,7 +8,8 @@
         "xlocale": "cpp",
         "utility": "cpp",
         "xutility": "cpp",
-        "climits": "cpp"
+        "climits": "cpp",
+        "algorithm": "cpp"
     },
     "cmake.sourceDirectory": "C:/Users/wikis/OneDrive/Documents/CPP/Leetcode/12_Linked_Lists"
 }
