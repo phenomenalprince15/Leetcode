@@ -9,7 +9,8 @@
         "utility": "cpp",
         "xutility": "cpp",
         "climits": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "iostream": "cpp"
     },
     "cmake.sourceDirectory": "C:/Users/wikis/OneDrive/Documents/CPP/Leetcode/12_Linked_Lists"
 }
