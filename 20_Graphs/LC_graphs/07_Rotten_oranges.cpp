@@ -93,13 +93,13 @@ int main() {
         }
     }
 
-    // cout << "Matrix" << endl;
-    // for (int i=0; i<m; i++) {
-    //     for (int j=0; j<n; j++) {
-    //         cout << nums[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
+    cout << "Matrix" << endl;
+    for (int i=0; i<m; i++) {
+        for (int j=0; j<n; j++) {
+            cout << nums[i][j] << " ";
+        }
+        cout << endl;
+    }
 /*
 grid = [[2,1,1],[1,1,0],[0,1,1]]
 3 3
