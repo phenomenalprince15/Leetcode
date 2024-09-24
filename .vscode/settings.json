@@ -62,5 +62,6 @@
         "xmemory": "cpp",
         "xtr1common": "cpp"
     },
-    "cmake.sourceDirectory": "C:/Users/wikis/OneDrive/Documents/CPP/Leetcode/12_Linked_Lists"
+    "cmake.sourceDirectory": "C:/Users/wikis/OneDrive/Documents/CPP/Leetcode/12_Linked_Lists",
+    "C_Cpp.errorSquiggles": "disabled"
 }
