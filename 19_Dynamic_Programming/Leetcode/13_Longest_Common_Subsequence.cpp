@@ -38,6 +38,18 @@ Explanation: There is no such common subsequence, so the result is 0.
 Approach - Think of creating all subsequences and try to look for each of them in each other.
 - OR think of Recurision and compare along the way.
 
+
+                            {abcde} | {ace} starting from end
+                                    |
+                                    | matching, means we found a letter which matches, we can count it in out length
+                            {abcd}  | {ac}
+                                    |
+                                    | not matching, we can two was, either keep checking with same letter or not.
+                    {abc} {ac}             {abcd} {a}   
+                        |                        |
+                        | match                  | not match
+                    {ab} {a}             {abc}{a}   {abcd}{}
+like this, it will continue, when we found a match, increase the length, if we couldn't find, max(choice 1, choice 2)
 */
 
 int LCSRecursive(string& s1, string& s2, int idx1, int idx2) {
